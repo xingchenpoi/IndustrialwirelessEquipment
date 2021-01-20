@@ -1,0 +1,36 @@
+/* Includes ------------------------------------------------------------------*/
+#include "bsp.h"
+
+
+/*******************************************************************************
+** 函数原型：void Bsp_Init(void)
+** 函数功能：驱动初始化
+** 输入参数：无
+** 输出参数：无
+** 备    注：
+ *******************************************************************************/
+void Bsp_Init(void)
+{
+	delay_init(64);               		//初始化延时函数
+	HAL_TIM_Base_Start_IT(&htim3);
+	HAL_TIM_Base_Start_IT(&htim4);
+	usart_enable(&huart1, s_usart1.RxBuf, USART1_RX_CNT_MAX);
+	usart_enable(&huart2, s_usart2.RxBuf, USART2_RX_CNT_MAX);
+	
+	MCP3208_Bsp_Init(&dev_mcp3208);
+
+	devAddr = Switch_DevAddr_Read();   //设备地址读取
+	if (devAddr == 0)
+		devAddr = 1;
+	netAddr = Switch_NetAddr_Read();   //网络地址读取
+	if (netAddr == 0)
+		netAddr = 1;
+
+	DO_Reboot_Sta_Set(&dev_do);        //DO上电状态设置
+}
+
+
+
+
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
