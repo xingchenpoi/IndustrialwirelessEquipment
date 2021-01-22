@@ -7,6 +7,8 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+extern	bool isSetupUart;
+
 extern	s_Usart s_usart1;
 
 extern	s_Usart s_usart2;
@@ -26,6 +28,10 @@ extern  s_LORA dev_lora;
 extern DO_TypeDef dev_do;
 
 extern DI_TypeDef dev_di;
+
+extern s_LED dev_led;
+
+extern s_CONFIG sysConfig;
 
 #ifdef __cplusplus
 }

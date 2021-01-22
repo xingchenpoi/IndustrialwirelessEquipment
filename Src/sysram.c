@@ -7,7 +7,7 @@ uint8_t Usart1_rxbuff[USART1_RX_CNT_MAX];
 uint8_t Usart2_txbuff[USART2_TX_CNT_MAX];
 uint8_t Usart2_rxbuff[USART2_RX_CNT_MAX];
 
-
+bool isSetupUart = FALSE;             //设置串口参数
 
 s_Usart s_usart1 = {
 	.RxBuf = Usart1_rxbuff,
@@ -43,5 +43,14 @@ s_LORA dev_lora = {
 DO_TypeDef dev_do;
 
 DI_TypeDef dev_di;
+
+s_LED dev_led = {
+	.isOpen = TRUE,
+	.isFlash = TRUE,
+	.pin = LED_PIN,
+	.port = LED_PORT,
+};
+
+s_CONFIG sysConfig;
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

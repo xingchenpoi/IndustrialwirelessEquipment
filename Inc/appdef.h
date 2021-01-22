@@ -159,6 +159,8 @@ extern "C" {
 #define USART2_RX_CNT_MAX	256
 #define USART2_TX_CNT_MAX	256
 
+#define IS_USART_COM(COM)   (((COM) == COM1)||((COM) == COM2))
+
 /******************************** MCP3208 *****************************/
 #define MCP3208_CS_PIN      GPIO_PIN_12
 #define MCP3208_CS_PORT		GPIOB
@@ -176,7 +178,7 @@ extern "C" {
 /****************************** MODBUS地址 ****************************/
 #define MB_FUNC_READ_HOLDING_ENABLED			1     //如果读保持寄存器被启用
 #define MB_FUNC_WRITE_HOLDING_ENABLED           1     //如果写单个寄存器被使用 
-#define MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED  0     //如果写多个寄存器被使用
+#define MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED  1     //如果写多个寄存器被使用
 
 #if MB_FUNC_READ_HOLDING_ENABLED
 #define  MODBUS_REG_READ_START_ADDR   0    //MODBUS 读寄存器起始地址
@@ -195,9 +197,9 @@ extern "C" {
 
 #define  SERIAL_PARA_REG			  0			   //串口属性  
    
-#define  DO0_CHL_STA_REG			  1			   //DO0通道状态
+#define  DO0_CHL_REBOOT_STA_REG       1			   //DO0通道上电状态
 
-#define  DO0_CHL_REBOOT_STA_REG       2			   //DO0通道上电状态
+#define  DO0_CHL_STA_REG			  2			   //DO0通道状态
 
 #define  DI0_CHL_PULSE_CNT_REG	      3			   //DI0脉冲计数器 
 #define  DI1_CHL_PULSE_CNT_REG		  4			   //DI1脉冲计数器
@@ -222,10 +224,6 @@ extern "C" {
 
 #define  AI1_VOLTAGE_REG1			  18		   //AI1电压值寄存器1   
 #define  AI1_VOLTAGE_REG2			  19		   //AI1电压值寄存器2 
-
-
-
-
 
 
 /****************************** LORA ****************************/
@@ -276,6 +274,28 @@ extern "C" {
 #define DI3_PORT		GPIOB
 #define DI3_CLK_ENABLE  __HAL_RCC_GPIOB_CLK_ENABLE()
 #define DI3_READ	    HAL_GPIO_ReadPin(DI3_PORT,DI3_PIN)
+
+/**************************** FLASH ****************************/
+#define STM32_FLASH_SIZE 	64 	 		    //所选STM32的FLASH容量大小(单位为K)
+#define STM32_FLASH_WREN 	1              	//使能FLASH写入(0，不是能;1，使能)
+#define FLASH_WAITETIME  	50000          	//FLASH等待超时时间
+#define STM32_FLASH_BASE   0x08000000 		//STM32 FLASH的起始地址
+#define FLASH_SAVE_ADDR    0X0800FC00		    //设置FLASH 保存地址(必须为偶数，且其值要大于本代码所占用FLASH的大小+0X08000000)
+
+#if STM32_FLASH_SIZE<256
+#define STM_SECTOR_SIZE 1024 //字节
+#else 
+#define STM_SECTOR_SIZE	2048
+#endif		 
+
+/***************************** LED *****************************/
+#define LED_PIN					GPIO_PIN_5
+#define LED_PORT				GPIOA
+#define LED_L()					HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_RESET)
+#define LED_H()					HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_SET)                
+#define LED_RED_CLK_ENABLE()    __HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define LED_BLINK_CYCLE    1000
 
 #ifdef __cplusplus
 }

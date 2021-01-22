@@ -55,6 +55,7 @@ typedef enum
 	TIM_LORA_COM_TO,
 	TIM_WDG,
 	TIM_DI_INTERVAL,
+	TIM_LED,
 	end_of_table_cnt_decnt
 }e_TIM_TABLE_ID;
 
@@ -75,6 +76,13 @@ typedef union
 		uint8_t  unuse : 3;														//备用
 	}bits;
 }UART_STA;
+
+
+typedef enum
+{
+	COM1= 0,
+	COM2
+}UART_INDEX;
 
 
 typedef enum
@@ -129,6 +137,14 @@ typedef enum
 	DI_CHL2,
 	DI_CHL3,
 }eDI_CHL;
+
+typedef enum
+{
+	eLED_FLASH = 0,
+	eLED_ON,
+	eLED_OFF,
+	eLED_End_Of_Table
+}e_TYPE_LED_MODE;
 
 /* ---------------------------------结构体------------------------------------*/
 
@@ -206,6 +222,32 @@ typedef struct
 	uint8_t rt_sta[DI_CHL_NUM];
 	uint16_t pulse_cnt[DI_CHL_NUM];
 }DI_TypeDef;
+
+typedef struct
+{
+	bool isOpen;
+	bool isFlash;
+	e_TYPE_LED_MODE mode;
+	uint16_t pin;
+	GPIO_TypeDef * port;
+}s_LED;
+
+
+typedef struct
+{
+	uint32_t BaudRate;
+	uint32_t StopBits;
+	uint32_t Parity;
+	uint32_t WordLength;
+}s_Uart_Para;
+
+//配置参数
+typedef struct
+{
+	bool isSave;
+	uint8_t do_Reboot_sta;   //上电状态
+	s_Uart_Para uartPara;    //串口参数
+}s_CONFIG;     
 
 #ifdef __cplusplus
 }

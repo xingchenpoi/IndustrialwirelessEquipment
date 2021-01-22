@@ -89,15 +89,16 @@ int32_t RegValToInt32(uint16_t *reg, uint8_t addr)
 ** 备    注：
 
 *******************************************************************************/
-void MODBUS_Data_Assignment(s_MCP3208 *mcp3208)
+void MODBUS_Data_Assignment(void)
 {
 	uint8_t temp[4] = { 0 },i = 0;
 	float val = 0.0;
+
+	modbusReg[SERIAL_PARA_REG] = Usart_Para_Get(sysConfig.uartPara);
 	
+	modbusReg[DO0_CHL_REBOOT_STA_REG] = dev_do.reboot_sta[0];
 
 	modbusReg[DO0_CHL_STA_REG] = dev_do.rt_sta[0];
-
-	modbusReg[DO0_CHL_REBOOT_STA_REG] = dev_do.reboot_sta[0];
 
 	modbusReg[DI0_CHL_PULSE_CNT_REG] = dev_di.pulse_cnt[0];
 	modbusReg[DI1_CHL_PULSE_CNT_REG] = dev_di.pulse_cnt[1];
@@ -120,7 +121,7 @@ void MODBUS_Data_Assignment(s_MCP3208 *mcp3208)
 	//电流赋值
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
-		val = mcp3208->current[i];
+		val = dev_mcp3208.current[i];
 		memcpy(&modbusReg[AI0_CURRENT_REG1 + i * 2], &val, 4);
 		temp[0] = modbusReg[AI0_CURRENT_REG2 + i * 2] >> 8;
 		temp[1] = modbusReg[AI0_CURRENT_REG2 + i * 2];
@@ -134,7 +135,7 @@ void MODBUS_Data_Assignment(s_MCP3208 *mcp3208)
 	//电压赋值
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
-		val = mcp3208->bat[i];
+		val = dev_mcp3208.bat[i];
 		memcpy(&modbusReg[AI0_VOLTAGE_REG1 + i * 2], &val, 4);
 		temp[0] = modbusReg[AI0_VOLTAGE_REG2 + i * 2] >> 8;
 		temp[1] = modbusReg[AI0_VOLTAGE_REG2 + i * 2];
@@ -215,6 +216,30 @@ void MODBUS_RTU_CMD06_Callback(uint8_t regStartAddr, uint16_t regval)
 
 	modbusReg[regStartAddr] = regval;
 
+	switch (regStartAddr)
+	{
+		case SERIAL_PARA_REG:
+			Usart_Para_Set(regval, &sysConfig.uartPara);
+			isSetupUart = TRUE;
+			ConfigPara_SaveData_Write(&sysConfig);
+			break;
+
+		case DO0_CHL_REBOOT_STA_REG:
+			regval = (regval > 0) ? 1 : 0;
+			sysConfig.do_Reboot_sta = regval;
+			dev_do.reboot_sta[0] = regval;
+			ConfigPara_SaveData_Write(&sysConfig);
+			break;
+
+		case DO0_CHL_STA_REG:
+			regval = (regval > 0) ? 1 : 0;
+			DO_Ctrl(&dev_do, 0, regval);
+			break;
+
+		default:
+			break;
+	}
+
 }
 #endif // MB_FUNC_WRITE_HOLDING_ENABLED
 
@@ -234,7 +259,36 @@ void MODBUS_RTU_CMD06_Callback(uint8_t regStartAddr, uint16_t regval)
 *******************************************************************************/
 void MODBUS_RTU_CMD16_Callback(uint8_t regStartAddr, uint8_t regNum)
 {
+	uint8_t i = 0, isSaveFlag = 0;
+	for (i = regStartAddr; i < regStartAddr + regNum; i++)
+	{
+		switch (i)
+		{
+			case SERIAL_PARA_REG:
+				Usart_Para_Set(modbusReg[i], &sysConfig.uartPara);
+				isSetupUart = TRUE;
+				isSaveFlag = 1;
+				break;
 
+			case DO0_CHL_REBOOT_STA_REG:
+				modbusReg[i] = (modbusReg[i] > 0) ? 1 : 0;
+				sysConfig.do_Reboot_sta = modbusReg[i];
+				dev_do.reboot_sta[0] = modbusReg[i];
+				isSaveFlag = 1;
+				break;
+
+			case DO0_CHL_STA_REG:
+				modbusReg[i] = (modbusReg[i] > 0) ? 1 : 0;
+				DO_Ctrl(&dev_do, 0, modbusReg[i]);
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	if(isSaveFlag)
+		ConfigPara_SaveData_Write(&sysConfig);
 }
 
 
@@ -330,7 +384,7 @@ uint16_t MODBUS_RTU_Handle(uint8_t *rxData, uint8_t rxLen, uint8_t *txData)
 		return len;
 
 	//数字赋值
-	MODBUS_Data_Assignment(&dev_mcp3208);
+	MODBUS_Data_Assignment();
 
 	//根据不同的功能码进行处理
 	switch (rxData[1])

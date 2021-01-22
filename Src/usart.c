@@ -276,6 +276,238 @@ void usart_enable(UART_HandleTypeDef *usart, uint8_t *pData, uint16_t Size)
 	__HAL_UART_ENABLE_IT(usart, UART_IT_IDLE);
 
 }
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void usart_enable(UART_HandleTypeDef *usart, uint8_t *pData, uint16_t Size)
+** 函数功能：串口使能
+** 输入参数：usart		串口首地址
+			 pData		接收数据首地址
+			 Size		接收数据长度
+** 输出参数：无
+** 备    注：
+*******************************************************************************/
+void Usart_Bsp_Init(UART_INDEX com, s_Uart_Para para)
+{
+	UART_HandleTypeDef* uartHandle = NULL;
+	s_Usart *uart_buff = NULL;
+	uint16_t rxBuffSize = 0;
+
+	if (!IS_USART_COM(com))   //如果串口编号不对，退出
+		return;
+
+	switch (com)
+	{
+		case COM1:
+			uartHandle = &huart1;
+			uartHandle->Instance = USART1;
+			uart_buff = &s_usart1;
+			rxBuffSize = USART1_RX_CNT_MAX;
+			break;
+
+		case COM2:
+			uartHandle = &huart2;
+			uartHandle->Instance = USART2;
+			uart_buff = &s_usart2;
+			rxBuffSize = USART2_RX_CNT_MAX;
+			break;
+
+		default:
+			return;
+	}
+
+	HAL_UART_MspDeInit(uartHandle);   //反初始化
+
+	uartHandle->Init.BaudRate = para.BaudRate;
+	uartHandle->Init.WordLength = para.WordLength;
+	uartHandle->Init.StopBits = para.StopBits;
+	uartHandle->Init.Parity = para.Parity;
+	uartHandle->Init.Mode = UART_MODE_TX_RX;
+	uartHandle->Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	uartHandle->Init.OverSampling = UART_OVERSAMPLING_16;
+	if (HAL_UART_Init(uartHandle) != HAL_OK)        //重新初始化
+	{
+		Error_Handler();
+	}
+
+	usart_enable(uartHandle, uart_buff->RxBuf, rxBuffSize);
+
+}
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void Usart_Para_Set(uint16_t data, s_Uart_Para *para)
+** 函数功能：串口参数设置
+** 输入参数：data  串口参数
+			 para  串口参数首地址
+** 输出参数：无
+** 备    注：
+*******************************************************************************/
+void Usart_Para_Set(uint16_t data, s_Uart_Para *para)
+{
+	uint16_t temp = 0;
+	s_Uart_Para tempPara = { 0 };
+
+	temp = data & 0x0fff;    //波特率设置
+	switch (temp)
+	{
+		case 0:
+			tempPara.BaudRate = 1200;
+			break;
+
+		case 1:
+			tempPara.BaudRate = 2400;
+			break;
+
+		case 2:
+			tempPara.BaudRate = 4800;
+			break;
+
+		case 3:
+			tempPara.BaudRate = 19200;
+			break;
+
+		case 4:
+			tempPara.BaudRate = 38400;
+			break;
+
+		case 5:
+			tempPara.BaudRate = 57600;
+			break;
+
+		case 6:
+			tempPara.BaudRate = 115200;
+			break;
+
+		default:
+				return;
+	}
+
+	temp = (data >> 12) & 0x03;    //奇偶位设置
+	switch (temp)
+	{
+		case 0:
+			tempPara.Parity = UART_PARITY_NONE;
+			tempPara.WordLength = UART_WORDLENGTH_8B;
+			break;
+
+		case 1:
+			tempPara.Parity = UART_PARITY_ODD;
+			tempPara.WordLength = UART_WORDLENGTH_9B;
+			break;
+
+		case 2:
+			tempPara.Parity = UART_PARITY_EVEN;
+			tempPara.WordLength = UART_WORDLENGTH_9B;
+			break;
+
+		default:
+			return;
+	}
+
+	temp = (data >> 12) & 0x0C;    //停止位设置
+	switch (temp)
+	{
+		case 0:
+			tempPara.StopBits = UART_STOPBITS_1;
+			break;
+
+		case 1:
+			tempPara.StopBits = UART_STOPBITS_2;
+			break;
+
+		default:
+			return;
+	}
+
+	if(tempPara.Parity != UART_PARITY_NONE)           //如果校验位不是无校验，则停止位只支持1位停止位
+		tempPara.StopBits = UART_STOPBITS_1;
+	
+	para->BaudRate = tempPara.BaudRate;        //参数赋值
+	para->Parity = tempPara.Parity;
+	para->StopBits = tempPara.StopBits;
+	para->WordLength = tempPara.WordLength;
+}
+
+
+
+
+/*******************************************************************************
+** 函数原型：uint16_t Usart_Para_Get(s_Uart_Para para)
+** 函数功能：串口参数获取
+** 输入参数：para  串口参数首地址
+** 输出参数：转化成16进制后的参数
+** 备    注：
+*******************************************************************************/
+uint16_t Usart_Para_Get(s_Uart_Para para)
+{
+	uint16_t ret = 0;
+
+	switch (para.BaudRate)   //波特率
+	{
+		case 1200:
+			ret = 0;
+			break;
+
+		case 2400:
+			ret = 1;
+			break;
+
+		case 4800:
+			ret = 2;
+			break;
+
+		case 19200:
+			ret = 3;
+			break;
+
+		case 38400:
+			ret = 4;
+			break;
+
+		case 57600:
+			ret = 5;
+			break;
+
+		case 115200:
+			ret = 6;
+			break;
+
+		default:
+			return 0;
+	}
+
+	switch (para.Parity)       //校验位
+	{
+		case UART_PARITY_NONE:
+			ret += 0;
+			break;
+
+		case UART_PARITY_ODD:
+			ret += 0x1000;
+			break;
+
+		case UART_PARITY_EVEN:
+			ret += 0x2000;
+			break;
+
+		default:
+			return 0;
+	}
+
+	if(para.StopBits == UART_STOPBITS_2) //停止位
+		ret += 0x4000;
+
+
+	return ret;
+}
+
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

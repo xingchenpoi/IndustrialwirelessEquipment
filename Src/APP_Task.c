@@ -33,6 +33,29 @@ void RS485_Lanuch(void)
 
 
 
+
+/*******************************************************************************
+** 函数原型：void RS485_SetUartPara_Lanuch(void)
+** 函数功能：RS485串口设置启动接口
+** 输入参数：无
+** 输出参数：无
+** 备    注：
+
+*******************************************************************************/
+void RS485_SetUartPara_Lanuch(void)
+{
+	if (isSetupUart != TRUE)         //如果要设置串口
+		return;
+
+	isSetupUart = FALSE;
+
+	Usart_Bsp_Init(COM1,sysConfig.uartPara);  //设置串口
+}
+
+
+
+
+
 /*******************************************************************************
 ** 函数原型：void APP_Display_Task_Lanuch(void)
 ** 函数功能：显示任务入口
@@ -43,7 +66,7 @@ void RS485_Lanuch(void)
 *******************************************************************************/
 void APP_Display_Task_Lanuch(void)
 {
-
+	LED_Lanuch();
 }
 
 
@@ -79,6 +102,7 @@ void APP_Collect_Task_Lanuch(void)
 void APP_Set_Task_Lanuch(void)
 {
 	WDG_Lanuch();
+	RS485_SetUartPara_Lanuch();
 }
 
 

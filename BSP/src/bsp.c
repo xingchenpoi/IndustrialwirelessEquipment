@@ -2,6 +2,70 @@
 #include "bsp.h"
 
 
+
+
+
+/*******************************************************************************
+** 函数原型：void ConfigPara_SaveData_Read(s_CONFIG *config)
+** 函数功能：参数保存
+** 输入参数：config 配置参数首地址
+** 输出参数：无
+** 备    注：
+*******************************************************************************/
+void ConfigPara_SaveData_Read(s_CONFIG *config)
+{
+	STMFLASH_Read(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+}
+
+
+
+
+/*******************************************************************************
+** 函数原型：void ConfigPara_SaveData_Write(s_CONFIG *config)
+** 函数功能：参数保存
+** 输入参数：config 配置参数首地址
+** 输出参数：无
+** 备    注：
+*******************************************************************************/
+void ConfigPara_SaveData_Write(s_CONFIG *config)
+{
+	STMFLASH_Write(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+}
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void PARA_Init(s_CONFIG *config)
+** 函数功能：参数初始化
+** 输入参数：config 配置参数首地址
+** 输出参数：无
+** 备    注：
+*******************************************************************************/
+void PARA_Init(s_CONFIG *config)
+{
+	ConfigPara_SaveData_Read(config);
+	if (config->isSave != TRUE)
+	{
+		config->isSave = TRUE;
+
+		config->do_Reboot_sta = 0;
+
+		config->uartPara.BaudRate = 9600;
+		config->uartPara.Parity = UART_PARITY_NONE;
+		config->uartPara.WordLength = UART_WORDLENGTH_8B;
+		config->uartPara.StopBits = UART_STOPBITS_1;
+
+		ConfigPara_SaveData_Write(config);
+	}
+
+}
+
+
+
+
+
 /*******************************************************************************
 ** 函数原型：void Bsp_Init(void)
 ** 函数功能：驱动初始化

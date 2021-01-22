@@ -1081,6 +1081,12 @@
                 <name>$PROJ_DIR$\..\Inc\APP_Do.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\Src\APP_Led.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Inc\APP_Led.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Src\APP_LORA.c</name>
             </file>
             <file>
@@ -1201,7 +1207,13 @@
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_Do.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_led.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_mcp3208.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_stmFlash.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_switch.h</name>
@@ -1222,7 +1234,13 @@
                 <name>$PROJ_DIR$\..\BSP\src\bsp_Do.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_led.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_mcp3208.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_stmFlash.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_switch.c</name>

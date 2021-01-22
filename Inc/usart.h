@@ -42,6 +42,9 @@ void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void usart_enable(UART_HandleTypeDef *usart, uint8_t *pData, uint16_t Size);
+void Usart_Bsp_Init(UART_INDEX com, s_Uart_Para para);
+void Usart_Para_Set(uint16_t data, s_Uart_Para *para);
+uint16_t Usart_Para_Get(s_Uart_Para para);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

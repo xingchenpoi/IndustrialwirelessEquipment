@@ -8,7 +8,7 @@ extern "C" {
 #include "main.h"
 
 void Bsp_Init(void);
-
+void ConfigPara_SaveData_Write(s_CONFIG *config);
 
 #ifdef __cplusplus
 }
