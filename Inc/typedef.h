@@ -56,6 +56,7 @@ typedef enum
 	TIM_WDG,
 	TIM_DI_INTERVAL,
 	TIM_LED,
+	TIM_TANK_INTERVAL,
 	end_of_table_cnt_decnt
 }e_TIM_TABLE_ID;
 
@@ -181,22 +182,14 @@ typedef struct
 	s_Usart *com;
 }s_RS485;
 
-//滤波结构体
-typedef struct
-{
-	uint16_t val[MCP3208_FILTER_NUM];
-}s_Filter;
-
 
 //MCP3208
 typedef struct
 {
 	SPI_HandleTypeDef *hspi;
-	uint8_t filterIndex;
 	uint16_t value[MCP3208_AI_CHL_NUM];
 	float bat[MCP3208_AI_CHL_NUM];
 	float current[MCP3208_AI_CHL_NUM];
-	s_Filter filter[MCP3208_AI_CHL_NUM];
 }s_MCP3208;
 
 //LORA
@@ -247,7 +240,17 @@ typedef struct
 	bool isSave;
 	uint8_t do_Reboot_sta;   //上电状态
 	s_Uart_Para uartPara;    //串口参数
-}s_CONFIG;     
+}s_CONFIG;   
+
+typedef struct
+{
+	float LastP;//上次估算协方差 初始化值为0.02
+	float Now_P;//当前估算协方差 初始化值为0
+	float out;//卡尔曼滤波器输出 初始化值为0
+	float Kg;//卡尔曼增益 初始化值为0
+	float Q;//过程噪声协方差 初始化值为0.001
+	float R;//观测噪声协方差 初始化值为0.543
+}KFP;//Kalman Filter parameter
 
 #ifdef __cplusplus
 }

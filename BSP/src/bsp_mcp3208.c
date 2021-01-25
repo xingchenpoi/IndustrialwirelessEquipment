@@ -5,10 +5,36 @@
 
 
 
+
+/*******************************************************************************
+** 函数原型：void KFP_Init(KFP *kfp)
+** 函数功能：卡尔曼滤波参数初始化
+** 输入参数：卡尔曼滤波
+** 输出参数：无
+** 备    注：
+ *******************************************************************************/
+void KFP_Init(KFP *kfp)
+{
+	uint8_t i = 0;
+
+	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
+	{
+		kfp[i].LastP = 0.02;
+		kfp[i].Now_P = 0;
+		kfp[i].out = 0;
+		kfp[i].Kg = 0;
+		kfp[i].Q = 0.001;
+		kfp[i].R = 0.543;
+	}
+
+}
+
+
+
 /*******************************************************************************
 ** 函数原型：void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
 ** 函数功能：MCP班级驱动初始化
-** 输入参数：mcp3208    mcp3208结构体指针
+** 输入参数：kfp     卡尔曼结构体参数
 ** 输出参数：无
 ** 备    注：
  *******************************************************************************/
@@ -18,6 +44,8 @@ void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
 	SPI_ReadWriteByte(mcp3208->hspi, 0xff);  //激活spi
 
 	MCP3208_CS_HIGH;
+
+	KFP_Init(KFP_Current);
 }
 
 
@@ -56,35 +84,25 @@ void MCP3208_Read(s_MCP3208 *mcp3208,uint8_t ch)
 
 
 
-
 /*******************************************************************************
-** 函数原型：uint16_t MCP3208_Filter(s_MCP3208 *mcp3208, uint8_t ch)
-** 函数功能：原始数据滤波
-** 输入参数：mcp3208    mcp3208结构体指针
-			 ch         AI通道通道
-** 输出参数：中值数据
-** 备    注：采用中值滤波法
+** 函数原型：float kalmanFilter(KFP *kfp, float input)
+** 函数功能：卡尔曼滤波
+** 输入参数：kfp     卡尔曼结构体参数
+			 input   需要滤波的参数的测量值（即传感器的采集值）
+** 输出参数：滤波后的参数（最优值）
+** 备    注：
  *******************************************************************************/
-uint16_t MCP3208_Filter(s_MCP3208 *mcp3208, uint8_t ch)
+float kalmanFilter(KFP *kfp, uint8_t index,float input)
 {
-	uint8_t i = 0,j = 0;
-	uint16_t temp = 0;
-
-	//冒泡法排序
-	for (j = 0; j < MCP3208_FILTER_NUM-1; j++)
-	{
-		for (i = 0; i < MCP3208_FILTER_NUM - 1 - j; i++)
-		{
-			if (mcp3208->filter[ch].val[i] > mcp3208->filter[ch].val[i + 1])
-			{
-				temp = mcp3208->filter[ch].val[i];
-				mcp3208->filter[ch].val[i] = mcp3208->filter[ch].val[i + 1];
-				mcp3208->filter[ch].val[i + 1] = temp;
-			}
-		}
-	}
-
-	return mcp3208->filter[ch].val[(MCP3208_FILTER_NUM - 1) / 2];
+	//预测协方差方程：k时刻系统估算协方差 = k-1时刻的系统协方差 + 过程噪声协方差
+	kfp[index].Now_P = kfp[index].LastP + kfp[index].Q;
+	//卡尔曼增益方程：卡尔曼增益 = k时刻系统估算协方差 / （k时刻系统估算协方差 + 观测噪声协方差）
+	kfp[index].Kg = kfp[index].Now_P / (kfp[index].Now_P + kfp[index].R);
+	//更新最优值方程：k时刻状态变量的最优值 = 状态变量的预测值 + 卡尔曼增益 * （测量值 - 状态变量的预测值）
+	kfp[index].out = kfp[index].out + kfp[index].Kg * (input - kfp[index].out);//因为这一次的预测值就是上一次的输出值
+	//更新协方差方程: 本次的系统协方差付给 kfp[index].LastP 威下一次运算准备。
+	kfp[index].LastP = (1 - kfp[index].Kg) * kfp[index].Now_P;
+	return kfp[index].out;
 }
 
 
@@ -111,22 +129,15 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 	{
 		MCP3208_CS_LOW;
 		MCP3208_Read(mcp3208, i);
-		mcp3208->filter[i].val[mcp3208->filterIndex] = mcp3208->value[i];
 		MCP3208_CS_HIGH;
 		delay_us(30);
 	}
-
-	//滤波计数
-	mcp3208->filterIndex++;
-	if (mcp3208->filterIndex < MCP3208_FILTER_NUM)
-		return;
-	mcp3208->filterIndex = 0;
 
 	//进行滤波处理
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
 		//滤波处理
-		mcp3208->value[i] = MCP3208_Filter(mcp3208, i);
+		mcp3208->value[i] = kalmanFilter(KFP_Current, i,(float)mcp3208->value[i]);
 		//电压计算
 		if (mcp3208->value[i] == 0)  //当处于0的时候不做处理
 		{
@@ -136,7 +147,7 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 		}
 		mcp3208->bat[i] = (float)mcp3208->value[i] * MCP3208_VERF / 4096 * 2;   //计算电压，电阻分压，要乘以2
 		//校准函数
-		mcp3208->bat[i] = 1.0489 * mcp3208->bat[i] + 0.0024;
+		mcp3208->bat[i] = 0.000100000001 * (mcp3208->bat[i] * mcp3208->bat[i]) + 1.048300000001 * mcp3208->bat[i] + 0.00310000001;
 		//电流转化
 		mcp3208->current[i] = mcp3208->bat[i] / 249.0;
 		//防止超过范围

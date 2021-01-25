@@ -53,4 +53,6 @@ s_LED dev_led = {
 
 s_CONFIG sysConfig;
 
+KFP KFP_Current[MCP3208_AI_CHL_NUM];
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

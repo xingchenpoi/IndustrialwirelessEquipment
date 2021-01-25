@@ -108,7 +108,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  SCHED_Setup_entry();
+	  if (APP_TIM_ReadDecounterValue(TIM_TANK_INTERVAL) == 0)
+	  {
+		  APP_TIM_StartDecounter(TIM_TANK_INTERVAL, 5);
+		  SCHED_Setup_entry();
+	  }
   }
   /* USER CODE END 3 */
 }

@@ -33,6 +33,8 @@ extern s_LED dev_led;
 
 extern s_CONFIG sysConfig;
 
+extern KFP KFP_Current[MCP3208_AI_CHL_NUM];
+
 #ifdef __cplusplus
 }
 #endif
