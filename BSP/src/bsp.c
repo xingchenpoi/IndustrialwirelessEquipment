@@ -91,6 +91,7 @@ void Bsp_Init(void)
 		netAddr = 1;
 
 	DO_Reboot_Sta_Set(&dev_do);        //DO…œµÁ◊¥Ã¨…Ë÷√
+
 }
 
 

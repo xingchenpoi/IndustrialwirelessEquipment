@@ -83,6 +83,7 @@ void LED_Entry(s_LED *led)
 
 	APP_TIM_StartDecounter(TIM_LED, LED_BLINK_CYCLE);         //重新开始计时
 
+	HAL_GPIO_TogglePin(led->port, led->pin);
 }
 
 

@@ -101,20 +101,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 *******************************************************************************/
 void DI_Lanuch(void)
-{
-    uint8_t i = 0;
-    
+{    
 	if (APP_TIM_ReadDecounterValue(TIM_DI_INTERVAL) != 0)
 		return;
 
 	APP_TIM_StartDecounter(TIM_DI_INTERVAL, DI_INTERVAL);
 
     DI_Sta_Get(&dev_di);       //获取当前DI值
-    
-    for(i=0;i<4;i++)
-    {
-		DO_Ctrl(&dev_do,i, dev_di.rt_sta[i]);
-    }   
 }
 
 
