@@ -3,7 +3,7 @@
 
 
 
-
+//uint16_t size = 0;
 
 /*******************************************************************************
 ** º¯ÊýÔ­ÐÍ£ºvoid ConfigPara_SaveData_Read(s_CONFIG *config)
@@ -14,7 +14,7 @@
 *******************************************************************************/
 void ConfigPara_SaveData_Read(s_CONFIG *config)
 {
-	//STMFLASH_Read(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+	STMFLASH_Read(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG)/2);
 }
 
 
@@ -29,7 +29,7 @@ void ConfigPara_SaveData_Read(s_CONFIG *config)
 *******************************************************************************/
 void ConfigPara_SaveData_Write(s_CONFIG *config)
 {
-	//STMFLASH_Write(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+	STMFLASH_Write(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG)/2);
 }
 
 
@@ -45,9 +45,9 @@ void ConfigPara_SaveData_Write(s_CONFIG *config)
 *******************************************************************************/
 void PARA_Init(s_CONFIG *config)
 {
-	//ConfigPara_SaveData_Read(config);
-	//if (config->isSave != TRUE)
-	//{
+	ConfigPara_SaveData_Read(config);
+	if (config->isSave != TRUE)
+	{
 		config->isSave = TRUE;
 
 		config->do_Reboot_sta = 0;
@@ -57,8 +57,8 @@ void PARA_Init(s_CONFIG *config)
 		config->uartPara.WordLength = UART_WORDLENGTH_8B;
 		config->uartPara.StopBits = UART_STOPBITS_1;
 
-		/*ConfigPara_SaveData_Write(config);*/
-	//}
+		ConfigPara_SaveData_Write(config);
+	}
 
 }
 

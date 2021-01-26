@@ -123,9 +123,9 @@ void STMFLASH_Write(uint32_t WriteAddr, uint16_t *pBuffer, uint16_t NumToWrite)
 ** 函数功能：从指定地址开始读出指定长度的数据
 ** 输入参数：ReadAddr:起始地址
 			 pBuffer:数据指针
-			 NumToWrite:半字(16位)数
+			 NumToWrite:半字(16位)数  
 ** 输出参数：无
-** 备    注：
+** 备    注：注意输入的数量为一半
 
 *******************************************************************************/
 void STMFLASH_Read(uint32_t ReadAddr, uint16_t *pBuffer, uint16_t NumToRead)
