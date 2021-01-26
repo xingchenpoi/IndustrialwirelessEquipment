@@ -235,12 +235,14 @@ typedef struct
 }s_Uart_Para;
 
 //配置参数
+#pragma pack(8)
 typedef struct
 {
 	bool isSave;
 	uint8_t do_Reboot_sta;   //上电状态
 	s_Uart_Para uartPara;    //串口参数
 }s_CONFIG;   
+#pragma pack()
 
 typedef struct
 {

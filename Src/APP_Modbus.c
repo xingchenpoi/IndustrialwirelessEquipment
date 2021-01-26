@@ -154,7 +154,7 @@ void MODBUS_Data_Assignment(void)
 
 
 /*******************************************************************************
-** 函数原型：uint16_t MODBUS_RTU_CMD03_Handle(uint8_t regStartAddr, uint8_t regNum, uint8_t *txData)
+** 函数原型：uint16_t MODBUS_RTU_CMD03_Handle(uint8_t regStartAddr, uint16_t regNum, uint8_t *txData)
 ** 函数功能：MODBUS 功能码03处理函数
 ** 输入参数：regStartAddr 寄存器起始地址
 			 regNum 寄存器数量
@@ -163,7 +163,7 @@ void MODBUS_Data_Assignment(void)
 ** 备    注：
 
 *******************************************************************************/
-uint16_t MODBUS_RTU_CMD03_Handle(uint8_t regStartAddr, uint8_t regNum, uint8_t *txData)
+uint16_t MODBUS_RTU_CMD03_Handle(uint8_t regStartAddr, uint16_t regNum, uint8_t *txData)
 {
 	uint16_t len = 0, calCRC = 0;
 	uint8_t i = 0;

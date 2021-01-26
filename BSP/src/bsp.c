@@ -14,7 +14,7 @@
 *******************************************************************************/
 void ConfigPara_SaveData_Read(s_CONFIG *config)
 {
-	STMFLASH_Read(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+	//STMFLASH_Read(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
 }
 
 
@@ -29,7 +29,7 @@ void ConfigPara_SaveData_Read(s_CONFIG *config)
 *******************************************************************************/
 void ConfigPara_SaveData_Write(s_CONFIG *config)
 {
-	STMFLASH_Write(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
+	//STMFLASH_Write(FLASH_SAVE_ADDR, (uint16_t *)config, sizeof(s_CONFIG));
 }
 
 
@@ -45,9 +45,9 @@ void ConfigPara_SaveData_Write(s_CONFIG *config)
 *******************************************************************************/
 void PARA_Init(s_CONFIG *config)
 {
-	ConfigPara_SaveData_Read(config);
-	if (config->isSave != TRUE)
-	{
+	//ConfigPara_SaveData_Read(config);
+	//if (config->isSave != TRUE)
+	//{
 		config->isSave = TRUE;
 
 		config->do_Reboot_sta = 0;
@@ -57,8 +57,8 @@ void PARA_Init(s_CONFIG *config)
 		config->uartPara.WordLength = UART_WORDLENGTH_8B;
 		config->uartPara.StopBits = UART_STOPBITS_1;
 
-		ConfigPara_SaveData_Write(config);
-	}
+		/*ConfigPara_SaveData_Write(config);*/
+	//}
 
 }
 
@@ -80,8 +80,11 @@ void Bsp_Init(void)
 	HAL_TIM_Base_Start_IT(&htim4);
 	usart_enable(&huart1, s_usart1.RxBuf, USART1_RX_CNT_MAX);
 	usart_enable(&huart2, s_usart2.RxBuf, USART2_RX_CNT_MAX);
+
+	PARA_Init(&sysConfig);
 	
 	MCP3208_Bsp_Init(&dev_mcp3208);
+	Usart_Bsp_Init(COM1, sysConfig.uartPara);    //rs485初始化
 
 	devAddr = Switch_DevAddr_Read();   //设备地址读取
 	if (devAddr == 0)
@@ -91,6 +94,8 @@ void Bsp_Init(void)
 		netAddr = 1;
 
 	DO_Reboot_Sta_Set(&dev_do);        //DO上电状态设置
+
+
 
 }
 

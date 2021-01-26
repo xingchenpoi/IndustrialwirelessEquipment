@@ -319,8 +319,6 @@ void Usart_Bsp_Init(UART_INDEX com, s_Uart_Para para)
 			return;
 	}
 
-	HAL_UART_MspDeInit(uartHandle);   //反初始化
-
 	uartHandle->Init.BaudRate = para.BaudRate;
 	uartHandle->Init.WordLength = para.WordLength;
 	uartHandle->Init.StopBits = para.StopBits;
@@ -370,18 +368,22 @@ void Usart_Para_Set(uint16_t data, s_Uart_Para *para)
 			break;
 
 		case 3:
-			tempPara.BaudRate = 19200;
+			tempPara.BaudRate = 9600;
 			break;
 
 		case 4:
-			tempPara.BaudRate = 38400;
+			tempPara.BaudRate = 19200;
 			break;
 
 		case 5:
-			tempPara.BaudRate = 57600;
+			tempPara.BaudRate = 38400;
 			break;
 
 		case 6:
+			tempPara.BaudRate = 57600;
+			break;
+
+		case 7:
 			tempPara.BaudRate = 115200;
 			break;
 
@@ -411,7 +413,7 @@ void Usart_Para_Set(uint16_t data, s_Uart_Para *para)
 			return;
 	}
 
-	temp = (data >> 12) & 0x0C;    //停止位设置
+	temp = (data >> 14)&0x03;    //停止位设置
 	switch (temp)
 	{
 		case 0:
@@ -463,20 +465,24 @@ uint16_t Usart_Para_Get(s_Uart_Para para)
 			ret = 2;
 			break;
 
-		case 19200:
+		case 9600:
 			ret = 3;
 			break;
 
-		case 38400:
+		case 19200:
 			ret = 4;
 			break;
 
-		case 57600:
+		case 38400:
 			ret = 5;
 			break;
 
-		case 115200:
+		case 57600:
 			ret = 6;
+			break;
+
+		case 115200:
+			ret = 7;
 			break;
 
 		default:
