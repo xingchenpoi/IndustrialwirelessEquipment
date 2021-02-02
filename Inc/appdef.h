@@ -1,3 +1,13 @@
+/*******************************************************************************
+**              广州中科院沈阳自动化研究所分所 Copyright (c)
+**                     物联网技术与应用研发中心
+**                        IM(2019-2022)
+** 作    者：viggo
+** 日    期：
+** 文件名称：appdef.h
+** 摘    要：宏定义声明
+
+*******************************************************************************/
 #ifndef __APPDEF_H
 #define __APPDEF_H
 #ifdef __cplusplus
@@ -162,17 +172,17 @@ extern "C" {
 #define IS_USART_COM(COM)   (((COM) == COM1)||((COM) == COM2))
 
 /******************************** MCP3208 *****************************/
-#define MCP3208_CS_PIN      GPIO_PIN_12
-#define MCP3208_CS_PORT		GPIOB
+#define MCP3208_CS_PIN				GPIO_PIN_12
+#define MCP3208_CS_PORT				GPIOB
+#define MCP3208_CS_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
+#define MCP3208_CS_HIGH()			HAL_GPIO_WritePin(MCP3208_CS_PORT, MCP3208_CS_PIN,GPIO_PIN_SET)
+#define MCP3208_CS_LOW()			HAL_GPIO_WritePin(MCP3208_CS_PORT, MCP3208_CS_PIN,GPIO_PIN_RESET)
 
-#define MCP3208_CS_HIGH		HAL_GPIO_WritePin(MCP3208_CS_PORT, MCP3208_CS_PIN,GPIO_PIN_SET)
-#define MCP3208_CS_LOW		HAL_GPIO_WritePin(MCP3208_CS_PORT, MCP3208_CS_PIN,GPIO_PIN_RESET)
-
-#define MCP3208_AI_CHL_NUM	2            //AI通道
-#define MCP3208_VERF        2.5          //参考电压
-#define MCP3208_FILTER_NUM  11           //滤波数
-#define MCP3208_CURRENT_MIN 0.004        //电流最大值
-#define MCP3208_CURRENT_MAX 0.020        //电流最小值
+#define MCP3208_AI_CHL_NUM			2            //AI通道
+#define MCP3208_VERF				2.5          //参考电压
+#define MCP3208_FILTER_NUM			11           //滤波数
+#define MCP3208_CURRENT_MIN			0.004        //电流最大值
+#define MCP3208_CURRENT_MAX			0.020        //电流最小值
 
 
 /****************************** MODBUS地址 ****************************/
@@ -227,53 +237,55 @@ extern "C" {
 
 
 /****************************** LORA ****************************/
-#define LORA_AT_PIN      GPIO_PIN_6
-#define LORA_AT_PORT	 GPIOA
-#define LORA_AT_MODE	 HAL_GPIO_WritePin(LORA_AT_PORT, LORA_AT_PIN,GPIO_PIN_SET)
-#define LORA_TX_MODE	 HAL_GPIO_WritePin(LORA_AT_PORT, LORA_AT_PIN,GPIO_PIN_RESET)
+#define LORA_AT_PIN					GPIO_PIN_6
+#define LORA_AT_PORT				GPIOA
+#define LORA_AT_CLK_ENABLE()		__HAL_RCC_GPIOA_CLK_ENABLE()
+#define LORA_AT_MODE()				HAL_GPIO_WritePin(LORA_AT_PORT, LORA_AT_PIN,GPIO_PIN_SET)
+#define LORA_TX_MODE()				HAL_GPIO_WritePin(LORA_AT_PORT, LORA_AT_PIN,GPIO_PIN_RESET)
 
-#define LORA_WP_PIN      GPIO_PIN_4
-#define LORA_WP_PORT	 GPIOA
-#define LORA_WP_HIGH	 HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_SET)
-#define LORA_WP_LOW		 HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_RESET)
+#define LORA_WP_PIN					GPIO_PIN_4
+#define LORA_WP_PORT				GPIOA
+#define LORA_WP_CLK_ENABLE()		__HAL_RCC_GPIOA_CLK_ENABLE()
+#define LORA_WP_HIGH()				HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_SET)
+#define LORA_WP_LOW()				HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_RESET)
 
 /****************************** WDG *****************************/
-#define WDG_PIN			GPIO_PIN_0
-#define WDG_PORT		GPIOA
-
+#define WDG_PIN						GPIO_PIN_0
+#define WDG_PORT					GPIOA
+#define WDG_CLK_ENABLE()			__HAL_RCC_GPIOA_CLK_ENABLE()
 /******************************* D0 *****************************/
 #define DO_CHL_NUM       1   
 
 #define DO0_PIN			 GPIO_PIN_1
 #define DO0_PORT		 GPIOA
-#define DO0_CLK_ENABLE   __HAL_RCC_GPIOA_CLK_ENABLE()
-#define DO0_H            HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_SET)
-#define DO0_L            HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_RESET)
-#define DO0_READ         HAL_GPIO_ReadPin(DO0_PORT, DO0_PIN)
+#define DO0_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()
+#define DO0_H()          HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_SET)
+#define DO0_L()          HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_RESET)
+#define DO0_READ()       HAL_GPIO_ReadPin(DO0_PORT, DO0_PIN)
 
 
 /******************************* DI *****************************/
 #define DI_CHL_NUM   4
 
-#define DI0_PIN			GPIO_PIN_6
-#define DI0_PORT		GPIOB
-#define DI0_CLK_ENABLE  __HAL_RCC_GPIOB_CLK_ENABLE()
-#define DI0_READ	    HAL_GPIO_ReadPin(DI0_PORT,DI0_PIN)
+#define DI0_PIN				GPIO_PIN_6
+#define DI0_PORT			GPIOB
+#define DI0_CLK_ENABLE()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DI0_READ()			HAL_GPIO_ReadPin(DI0_PORT,DI0_PIN)
 
-#define DI1_PIN			GPIO_PIN_7
-#define DI1_PORT		GPIOB
-#define DI1_CLK_ENABLE  __HAL_RCC_GPIOB_CLK_ENABLE()
-#define DI1_READ	    HAL_GPIO_ReadPin(DI1_PORT,DI1_PIN)
+#define DI1_PIN				GPIO_PIN_7
+#define DI1_PORT			GPIOB
+#define DI1_CLK_ENABLE()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DI1_READ()			HAL_GPIO_ReadPin(DI1_PORT,DI1_PIN)
 
-#define DI2_PIN			GPIO_PIN_8
-#define DI2_PORT		GPIOB
-#define DI2_CLK_ENABLE  __HAL_RCC_GPIOB_CLK_ENABLE()
-#define DI2_READ	    HAL_GPIO_ReadPin(DI2_PORT,DI2_PIN)
+#define DI2_PIN				GPIO_PIN_8
+#define DI2_PORT			GPIOB
+#define DI2_CLK_ENABLE()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DI2_READ()			HAL_GPIO_ReadPin(DI2_PORT,DI2_PIN)
 
-#define DI3_PIN			GPIO_PIN_9
-#define DI3_PORT		GPIOB
-#define DI3_CLK_ENABLE  __HAL_RCC_GPIOB_CLK_ENABLE()
-#define DI3_READ	    HAL_GPIO_ReadPin(DI3_PORT,DI3_PIN)
+#define DI3_PIN				GPIO_PIN_9
+#define DI3_PORT			GPIOB
+#define DI3_CLK_ENABLE()	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DI3_READ()			HAL_GPIO_ReadPin(DI3_PORT,DI3_PIN)
 
 /**************************** FLASH ****************************/
 #define STM32_FLASH_SIZE 	64 	 		    //所选STM32的FLASH容量大小(单位为K)
@@ -308,3 +320,6 @@ extern "C" {
 }
 #endif
 #endif /*__APPDEF_H */
+
+
+/*--------------------------------文件结尾------------------------------------*/

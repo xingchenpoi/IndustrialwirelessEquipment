@@ -18,7 +18,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usart.h"
+#include "bsp_usart.h"
 
 /* USER CODE BEGIN 0 */
 

@@ -2,20 +2,14 @@
 **              广州中科院沈阳自动化研究所分所 Copyright (c)
 **                     物联网技术与应用研发中心
 **                        IM(2019-2022)
-** 作    者：资双飞
-** 日    期：2019.10.29
+** 作    者：viggo
+** 日    期：
 ** 文件名称：APP_LORA.c
-** 摘    要：LORA
-
-AT+NET=00       // 定频模式，点对点
-
-
-
+** 摘    要：LORA板级驱动初始化，LORA启动程序
 
 *******************************************************************************/
 /*--------------------------------- 头文件 -----------------------------------*/  
 #include "APP_LORA.h"                                                                // 系统底板配置函数头文件                                                          
-#include <stdio.h>
 
 
 
@@ -81,6 +75,39 @@ const char LoRa_Freqs[100][9] = { "1C052820\0", "1C083560\0", "1C0B42A0\0", "1C0
 
 
 
+
+/*******************************************************************************
+** 函数原型：void LORA_Bsp_Init(void)
+** 函数功能：LORA板级驱动初始化
+** 输入参数：无
+** 输出参数：无
+** 备    注：
+
+*******************************************************************************/
+void LORA_Bsp_Init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+	LORA_AT_CLK_ENABLE();
+	LORA_WP_CLK_ENABLE();
+
+	GPIO_InitStruct.Pin = LORA_AT_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(LORA_AT_PORT, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LORA_WP_PIN;
+	HAL_GPIO_Init(LORA_WP_PORT, &GPIO_InitStruct);
+
+
+	MX_USART2_UART_Init();
+	usart_enable(&huart2, s_usart2.RxBuf, USART2_RX_CNT_MAX);
+}
+
+
+
+
 /*******************************************************************************
 ** 函数原型：void LORA_StartUp_Handle(s_LORA *lora)
 ** 函数功能：LORA启动处理
@@ -91,11 +118,11 @@ const char LoRa_Freqs[100][9] = { "1C052820\0", "1C083560\0", "1C0B42A0\0", "1C0
 *******************************************************************************/
 void LORA_StartUp_Handle(s_LORA *lora)
 {
-	LORA_AT_MODE;           // AT脚拉高，AT设置模式
+	LORA_AT_MODE();           // AT脚拉高，AT设置模式
 
-	LORA_WP_HIGH;
+	LORA_WP_HIGH();
 	delay_ms(10);
-	LORA_WP_LOW;
+	LORA_WP_LOW();
 	delay_ms(10);
 
 	delay_ms(50);
@@ -321,7 +348,7 @@ void LORA_SoftInit_Handle(s_LORA *lora)
 					if (lora->at_cmd == LORA_AT_CMD_RX_OFF)  //判断有没有处理完成
 					{
 						lora->state = eLORA_WORK;
-						LORA_TX_MODE;   //进入传透模式
+						LORA_TX_MODE();   //进入传透模式
 						delay_ms(100);
 
 						memcpy(lora->com->TxBuf, LORA_AT, strlen(LORA_AT)); //激活串口
@@ -435,3 +462,5 @@ void LORA_Lanuch(void)
 {
 	LORA_Entry(&dev_lora);
 }
+
+/*--------------------------------文件结尾------------------------------------*/

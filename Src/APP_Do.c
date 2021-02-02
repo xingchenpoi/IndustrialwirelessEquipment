@@ -2,10 +2,10 @@
 **              广州中科院沈阳自动化研究所分所 Copyright (c)
 **                     物联网技术与应用研发中心
 **                        IM(2019-2022)
-** 作    者：
+** 作    者：viggo
 ** 日    期：
-** 文件名称：
-** 摘    要：
+** 文件名称：APP_Do.c
+** 摘    要：DO上电状态设置，DO通道状态获取，DO控制
 
 *******************************************************************************/
 /*--------------------------------- 头文件 -----------------------------------*/
@@ -27,9 +27,9 @@
 void DO_Reboot_Sta_Set(DO_TypeDef *p)
 {
 	if (p->reboot_sta[0])
-		DO0_H;
+		DO0_H();
 	else
-		DO0_L;
+		DO0_L();
 
 	//if (p->reboot_sta[1])
 	//	DO1_OUT_H();
@@ -62,7 +62,7 @@ void DO_Reboot_Sta_Set(DO_TypeDef *p)
 *******************************************************************************/
 void DO_Sta_Get(DO_TypeDef *p)
 {
-	p->rt_sta[0] = DO0_READ;
+	p->rt_sta[0] = DO0_READ();
 	//p->rt_sta[1] = DO1_OUT_READ();
 	//p->rt_sta[2] = DO2_OUT_READ();
 	//p->rt_sta[3] = DO3_OUT_READ();
@@ -92,9 +92,9 @@ void DO_Ctrl(DO_TypeDef *p,uint8_t index,uint8_t val)
 	{
 		case 0:
 			if (val == 0)
-				DO0_L;
+				DO0_L();
 			else
-				DO0_H;
+				DO0_H();
 			break;
 
 		//case 1:
@@ -128,5 +128,5 @@ void DO_Ctrl(DO_TypeDef *p,uint8_t index,uint8_t val)
 
 
 
-
+/*--------------------------------文件结尾------------------------------------*/
 

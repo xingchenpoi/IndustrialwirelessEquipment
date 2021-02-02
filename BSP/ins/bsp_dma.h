@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __dma_H
-#define __dma_H
+#ifndef __BSP_DMA_H
+#define __BSP_DMA_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -47,7 +47,7 @@ void MX_DMA_Init(void);
 }
 #endif
 
-#endif /* __dma_H */
+#endif /* __BSP_DMA_H */
 
 /**
   * @}

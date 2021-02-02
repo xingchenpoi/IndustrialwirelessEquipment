@@ -1,3 +1,13 @@
+/*******************************************************************************
+**              广州中科院沈阳自动化研究所分所 Copyright (c)
+**                     物联网技术与应用研发中心
+**                        IM(2019-2022)
+** 作    者：viggo
+** 日    期：
+** 文件名称：bsp_mcp3208.c
+** 摘    要：MCP3208 板级驱动初始化,MCP3208数据读取、卡尔曼滤波
+
+*******************************************************************************/
 /* Includes ------------------------------------------------------------------*/
 #include "bsp_mcp3208.h"
 
@@ -40,10 +50,22 @@ void KFP_Init(KFP *kfp)
  *******************************************************************************/
 void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
 {
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+	MCP3208_CS_CLK_ENABLE();
+
+	GPIO_InitStruct.Pin = MCP3208_CS_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(MCP3208_CS_PORT, &GPIO_InitStruct);
+
+
+	MX_SPI2_Init();						//SPI 初始化
 	__HAL_SPI_ENABLE(mcp3208->hspi);
 	SPI_ReadWriteByte(mcp3208->hspi, 0xff);  //激活spi
 
-	MCP3208_CS_HIGH;
+	MCP3208_CS_HIGH();
 
 	KFP_Init(KFP_Current);
 }
@@ -127,9 +149,9 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 	//读取电压数据
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
-		MCP3208_CS_LOW;
+		MCP3208_CS_LOW();
 		MCP3208_Read(mcp3208, i);
-		MCP3208_CS_HIGH;
+		MCP3208_CS_HIGH();
 		delay_us(30);
 	}
 
@@ -174,3 +196,5 @@ void MCP3208_Lanuch(void)
 	MCP3208_Enrty(&dev_mcp3208);
 }
 
+
+/*--------------------------------文件结尾------------------------------------*/

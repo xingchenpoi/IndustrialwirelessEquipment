@@ -1227,6 +1227,12 @@
                 <name>$PROJ_DIR$\..\Inc\APP_Modbus.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\Src\APP_rs485.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Inc\APP_rs485.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Src\APP_Scheduler.c</name>
             </file>
             <file>
@@ -1254,18 +1260,6 @@
                 <name>$PROJ_DIR$\..\Inc\delay.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Src\dma.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Inc\dma.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Src\gpio.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Inc\gpio.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\Inc\includes.h</name>
             </file>
             <file>
@@ -1273,12 +1267,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\Inc\main.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Src\spi.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Inc\spi.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\Inc\stm32f1xx_hal_conf.h</name>
@@ -1305,19 +1293,7 @@
                 <name>$PROJ_DIR$\..\Inc\sysram.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Src\tim.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Inc\tim.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\Inc\typedef.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Src\usart.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\Inc\usart.h</name>
             </file>
         </group>
     </group>
@@ -1332,6 +1308,9 @@
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_Di.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_dma.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_Do.h</name>
             </file>
             <file>
@@ -1341,10 +1320,22 @@
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_mcp3208.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_rs485.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_spi.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_stmFlash.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_switch.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_tim.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\ins\bsp_usart.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\ins\bsp_wdg.h</name>
@@ -1359,6 +1350,9 @@
                 <name>$PROJ_DIR$\..\BSP\src\bsp_Di.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_dma.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_Do.c</name>
             </file>
             <file>
@@ -1368,10 +1362,22 @@
                 <name>$PROJ_DIR$\..\BSP\src\bsp_mcp3208.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_rs485.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_spi.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_stmFlash.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_switch.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_tim.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\BSP\src\bsp_usart.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\BSP\src\bsp_wdg.c</name>

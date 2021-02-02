@@ -2,10 +2,10 @@
 **              广州中科院沈阳自动化研究所分所 Copyright (c)
 **                     物联网技术与应用研发中心
 **                        IM(2019-2022)
-** 作    者：
+** 作    者：viggo
 ** 日    期：
-** 文件名称：
-** 摘    要：
+** 文件名称：bsp_Di.c
+** 摘    要：DI板级驱动初始化
 
 *******************************************************************************/
 /*--------------------------------- 头文件 -----------------------------------*/
@@ -28,10 +28,10 @@ void DI_Bsp_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-	DI0_CLK_ENABLE;
-	DI1_CLK_ENABLE;
-	DI2_CLK_ENABLE;
-	DI3_CLK_ENABLE;
+	DI0_CLK_ENABLE();
+	DI1_CLK_ENABLE();
+	DI2_CLK_ENABLE();
+	DI3_CLK_ENABLE();
 
 	GPIO_InitStruct.Pin = DI0_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -57,5 +57,5 @@ void DI_Bsp_Init(void)
 
 
 
-
+/*--------------------------------文件结尾------------------------------------*/
 

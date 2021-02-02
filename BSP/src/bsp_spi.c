@@ -18,7 +18,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "spi.h"
+#include "bsp_spi.h"
 
 /* USER CODE BEGIN 0 */
 

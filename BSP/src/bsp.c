@@ -1,3 +1,13 @@
+/*******************************************************************************
+**              广州中科院沈阳自动化研究所分所 Copyright (c)
+**                     物联网技术与应用研发中心
+**                        IM(2019-2022)
+** 作    者：viggo
+** 日    期：
+** 文件名称：bsp.c
+** 摘    要：板级驱动处理
+
+*******************************************************************************/
 /* Includes ------------------------------------------------------------------*/
 #include "bsp.h"
 
@@ -59,7 +69,6 @@ void PARA_Init(s_CONFIG *config)
 
 		ConfigPara_SaveData_Write(config);
 	}
-
 }
 
 
@@ -75,17 +84,21 @@ void PARA_Init(s_CONFIG *config)
  *******************************************************************************/
 void Bsp_Init(void)
 {
+	MX_DMA_Init();
+	MX_TIM3_Init();
+
 	delay_init(64);               		//初始化延时函数
 	HAL_TIM_Base_Start_IT(&htim3);
-	HAL_TIM_Base_Start_IT(&htim4);
-	usart_enable(&huart1, s_usart1.RxBuf, USART1_RX_CNT_MAX);
-	usart_enable(&huart2, s_usart2.RxBuf, USART2_RX_CNT_MAX);
-
-	PARA_Init(&sysConfig);
 	
-	MCP3208_Bsp_Init(&dev_mcp3208);
-	Usart_Bsp_Init(COM1, sysConfig.uartPara);    //rs485初始化
+	PARA_Init(&sysConfig);
 
+	LED_Bsp_Init();                    //LED初始化
+	
+	MCP3208_Bsp_Init(&dev_mcp3208);    //AI初始化
+	RS485_Bsp_Init();                  //RS485初始化
+	LORA_Bsp_Init();                   //LoRa初始化
+
+	Switch_Bsp_Init();                 //拨码开关初始化
 	devAddr = Switch_DevAddr_Read();   //设备地址读取
 	if (devAddr == 0)
 		devAddr = 1;
@@ -93,14 +106,17 @@ void Bsp_Init(void)
 	if (netAddr == 0)
 		netAddr = 1;
 
+	DO_Bsp_Init();                     //DO初始化
+	dev_do.reboot_sta[0] = sysConfig.do_Reboot_sta;   //获取初始化状态
 	DO_Reboot_Sta_Set(&dev_do);        //DO上电状态设置
 
+	DI_Bsp_Init();                     //DI初始化
 
-
+	WDG_Bsp_Init();                    //硬件看门狗初始化
 }
 
 
 
 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/*--------------------------------文件结尾------------------------------------*/

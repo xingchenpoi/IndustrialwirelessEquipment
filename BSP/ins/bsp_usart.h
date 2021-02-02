@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __usart_H
-#define __usart_H
+#ifndef __BSP_USART_H
+#define __BSP_USART_H
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -50,7 +50,7 @@ uint16_t Usart_Para_Get(s_Uart_Para para);
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ usart_H */
+#endif /*__BSP_USART_H*/
 
 /**
   * @}
