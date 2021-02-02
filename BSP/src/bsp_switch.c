@@ -16,16 +16,15 @@ uint8_t Switch_DevAddr_Read(void)
 {
 	uint8_t addr_tmp = 0;								// 临时地址
 
-	// 读数    
-
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_7) ;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_0)  << 1;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1)  << 2;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10) << 3;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) << 4;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_8)  << 5;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) << 6;
-	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12) << 7;
+	// 读数    	
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_12) ;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) << 1;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_8)  << 2;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) << 3;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10) << 4;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1)  << 5;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_0)  << 6;
+	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_7)  << 7;
 
 	return (uint8_t)~addr_tmp;          // 返回地址值：0-255
 }
@@ -44,7 +43,7 @@ uint8_t Switch_DevAddr_Read(void)
 *******************************************************************************/
 uint8_t Switch_NetAddr_Read(void)
 {
-	uint8_t addr_tmp = 0x00;								// 临时地址
+	uint8_t addr_tmp = 0xF0;								// 临时地址
 
 		// 读数
 	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
@@ -52,5 +51,5 @@ uint8_t Switch_NetAddr_Read(void)
 	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3) << 2;
 	addr_tmp |= (uint8_t)HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15) << 3;
 
-	return addr_tmp;          // 返回地址值：0-255
+	return (uint8_t)~addr_tmp;          // 返回地址值：0-255
 }

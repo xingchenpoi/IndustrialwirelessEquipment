@@ -17,9 +17,11 @@ void RS485_Lanuch(void)
 	{
 		dev_RS485.com->Status.bits.TaskDealFlg = 0;
 
+		APP_LED_Comm_OneFlash();                                //通信灯闪烁一次
+
 		dev_RS485.com->TxNum = MODBUS_RTU_Handle(dev_RS485.com->RxBuf,
 			dev_RS485.com->RxCnt,
-			dev_RS485.com->TxBuf);
+			dev_RS485.com->TxBuf);                              //modbus 解析
 		if (dev_RS485.com->TxNum > 0)
 		{
 			HAL_UART_Transmit_DMA(dev_RS485.com->husart, dev_RS485.com->TxBuf, dev_RS485.com->TxNum);

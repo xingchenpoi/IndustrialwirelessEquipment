@@ -31,6 +31,8 @@ extern DI_TypeDef dev_di;
 
 extern s_LED dev_led;
 
+extern s_LED dev_ledComm;
+
 extern s_CONFIG sysConfig;
 
 extern KFP KFP_Current[MCP3208_AI_CHL_NUM];

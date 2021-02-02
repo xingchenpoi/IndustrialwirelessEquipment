@@ -295,7 +295,14 @@ extern "C" {
 #define LED_H()					HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_SET)                
 #define LED_RED_CLK_ENABLE()    __HAL_RCC_GPIOA_CLK_ENABLE()
 
-#define LED_BLINK_CYCLE    1000
+#define LED_COMM_PIN            GPIO_PIN_13
+#define LED_COMM_PORT			GPIOC
+#define LED_COMM_L()			HAL_GPIO_WritePin(LED_COMM_PORT, LED_COMM_PIN, GPIO_PIN_SET)
+#define LED_COMM_H()			HAL_GPIO_WritePin(LED_COMM_PORT, LED_COMM_PIN, GPIO_PIN_RESET)                
+#define LED_COMM_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()
+
+#define LED_BLINK_CYCLE			1000
+#define LED_COMM_BLINK_CYCLE	50
 
 #ifdef __cplusplus
 }

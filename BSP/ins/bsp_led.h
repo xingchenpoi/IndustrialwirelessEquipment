@@ -8,8 +8,10 @@ extern "C" {
 #include "main.h"
 
 	void LED_Lanuch(void);
-	void LED_Bsp_Init(s_LED *dev);
-	void LED_Bsp_DeInit(s_LED *dev);
+	void LED_Bsp_Init(void);
+	void LED_Bsp_DeInit(void);
+	void LED_Run_Ctrl(bool onoff);
+	void LED_Comm_Ctrl(bool onoff);
 #ifdef __cplusplus
 }
 #endif

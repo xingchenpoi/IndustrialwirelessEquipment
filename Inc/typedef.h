@@ -55,7 +55,8 @@ typedef enum
 	TIM_LORA_COM_TO,
 	TIM_WDG,
 	TIM_DI_INTERVAL,
-	TIM_LED,
+	TIM_LED,                 //运行灯
+	TIM_LED_COMM,            //通信灯
 	TIM_TANK_INTERVAL,
 	end_of_table_cnt_decnt
 }e_TIM_TABLE_ID;
@@ -144,6 +145,7 @@ typedef enum
 	eLED_FLASH = 0,
 	eLED_ON,
 	eLED_OFF,
+	eLED_ONE_FLASH,      //一次闪烁
 	eLED_End_Of_Table
 }e_TYPE_LED_MODE;
 
@@ -218,11 +220,14 @@ typedef struct
 
 typedef struct
 {
-	bool isOpen;
-	bool isFlash;
-	e_TYPE_LED_MODE mode;
-	uint16_t pin;
-	GPIO_TypeDef * port;
+	bool isOpen;            //是否初始化
+	bool isFlash;           //是否闪烁
+	e_TYPE_LED_MODE mode;   //LED模式
+	e_TIM_TABLE_ID timer;   //闪烁计时
+	uint16_t pin;           //LED引脚
+	uint32_t flashingCycle;    //闪烁周期
+	GPIO_TypeDef * port;    //LED 端口
+	void(*Ctrl)(bool onoff);
 }s_LED;
 
 

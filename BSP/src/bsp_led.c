@@ -6,20 +6,22 @@
 
 
 /*******************************************************************************
-** 函数原型：void LED_Bsp_Init(s_LED *dev)
+** 函数原型：void LED_Bsp_Init(void)
 ** 函数功能：LED板级驱动初始化
 ** 输入参数：dev LED首地址
 ** 输出参数：无
 ** 备    注：
 
 *******************************************************************************/
-void LED_Bsp_Init(s_LED *dev)
+void LED_Bsp_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
 	LED_RED_CLK_ENABLE();           //时钟初始化
+	LED_COMM_CLK_ENABLE();
 
 	LED_L();
+	LED_COMM_L();
 
 	GPIO_InitStruct.Pin = LED_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -27,7 +29,11 @@ void LED_Bsp_Init(s_LED *dev)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(LED_PORT, &GPIO_InitStruct);
 
-	dev->isOpen = TRUE;
+	GPIO_InitStruct.Pin = LED_COMM_PIN;
+	HAL_GPIO_Init(LED_COMM_PORT, &GPIO_InitStruct);
+
+	dev_led.isOpen = TRUE;
+	dev_ledComm.isOpen = TRUE;
 }
 
 
@@ -35,18 +41,19 @@ void LED_Bsp_Init(s_LED *dev)
 
 
 /*******************************************************************************
-** 函数原型：void LED_Bsp_DeInit(s_LED *dev)
+** 函数原型：void LED_Bsp_DeInit(void)
 ** 函数功能：LED板级驱动反初始化
-** 输入参数：dev LED首地址
+** 输入参数：无
 ** 输出参数：无
 ** 备    注：
 
 *******************************************************************************/
-void LED_Bsp_DeInit(s_LED *dev)
+void LED_Bsp_DeInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
 	LED_RED_CLK_ENABLE();           //时钟初始化
+	LED_COMM_CLK_ENABLE();            
 
 	LED_L();
 
@@ -56,7 +63,51 @@ void LED_Bsp_DeInit(s_LED *dev)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(LED_PORT, &GPIO_InitStruct);
 
-	dev->isOpen = FALSE;
+	GPIO_InitStruct.Pin = LED_COMM_PIN;
+	HAL_GPIO_Init(LED_COMM_PORT, &GPIO_InitStruct);
+
+	dev_led.isOpen = FALSE;
+	dev_ledComm.isOpen = FALSE;
+}
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void LED_Run_Ctrl(bool onoff)
+** 函数功能：LED 运行灯控制
+** 输入参数：onoff  TRUE 开启 FALSE 关闭
+** 输出参数：无
+** 备    注：
+
+*******************************************************************************/
+void LED_Run_Ctrl(bool onoff)
+{
+	if(onoff)
+		LED_H();
+	else
+		LED_L();
+}
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void LED_Comm_Ctrl(bool onoff)
+** 函数功能：LED 通信灯控制
+** 输入参数：onoff  TRUE 开启 FALSE 关闭
+** 输出参数：无
+** 备    注：
+
+*******************************************************************************/
+void LED_Comm_Ctrl(bool onoff)
+{
+	if (onoff)
+		LED_COMM_H();
+	else
+		LED_COMM_L();
 }
 
 
@@ -78,12 +129,18 @@ void LED_Entry(s_LED *led)
 	if (led->isFlash == FALSE)					   //LED闪烁使能
 		return;
 
-	if (APP_TIM_ReadDecounterValue(TIM_LED) != 0)  //判断计时有没有到
+	if (APP_TIM_ReadDecounterValue(led->timer) != 0)  //判断计时有没有到
 		return;
 
-	APP_TIM_StartDecounter(TIM_LED, LED_BLINK_CYCLE);         //重新开始计时
-
 	HAL_GPIO_TogglePin(led->port, led->pin);
+
+	if (led->mode == eLED_ONE_FLASH)               //如果闪烁为单次闪烁，则关闭灯
+	{
+		led->isFlash = FALSE;
+		return;
+	}
+
+	APP_TIM_StartDecounter(led->timer, led->flashingCycle);         //重新开始计时
 }
 
 
@@ -101,6 +158,7 @@ void LED_Entry(s_LED *led)
 void LED_Lanuch(void)
 {
 	LED_Entry(&dev_led);
+	LED_Entry(&dev_ledComm);
 }
 
 

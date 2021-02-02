@@ -47,8 +47,21 @@ DI_TypeDef dev_di;
 s_LED dev_led = {
 	.isOpen = TRUE,
 	.isFlash = TRUE,
+	.timer = TIM_LED,
 	.pin = LED_PIN,
 	.port = LED_PORT,
+	.flashingCycle = LED_BLINK_CYCLE,
+	.Ctrl = &LED_Run_Ctrl,
+};
+
+s_LED dev_ledComm = {
+	.isOpen = TRUE,
+	.isFlash = FALSE,
+	.timer = TIM_LED_COMM,
+	.pin = LED_COMM_PIN,
+	.port = LED_COMM_PORT,
+	.flashingCycle = LED_COMM_BLINK_CYCLE,
+	.Ctrl = &LED_Comm_Ctrl,
 };
 
 s_CONFIG sysConfig;

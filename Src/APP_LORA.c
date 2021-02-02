@@ -371,7 +371,7 @@ void LORA_Wrok_Handle(s_LORA *lora)
 	if (lora->com->Status.bits.TaskDealFlg == 1)
 	{
 		lora->com->Status.bits.TaskDealFlg = 0;   //清除接收完成标志位
-
+		APP_LED_Comm_OneFlash();                  //通信灯闪烁一次
 		//MODBUS处理
 		lora->com->TxNum = MODBUS_RTU_Handle(lora->com->RxBuf,
 											 lora->com->RxCnt,
