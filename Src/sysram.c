@@ -19,6 +19,9 @@ uint8_t Usart2_rxbuff[USART2_RX_CNT_MAX];
 
 bool isSetupUart = FALSE;             //设置串口参数
 
+bool isSetCailPara = FALSE;           //设置校验参数
+
+
 s_Usart s_usart1 = {
 	.RxBuf = Usart1_rxbuff,
 	.TxBuf = Usart1_txbuff,

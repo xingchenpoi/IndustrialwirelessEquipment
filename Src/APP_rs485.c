@@ -31,6 +31,11 @@ void RS485_Lanuch(void)
 
 		APP_LED_Comm_OneFlash();                                //通信灯闪烁一次
 
+		Protolcol_Parse(dev_RS485.com, &sysConfig);
+
+		if (dev_RS485.com->RxCnt == 0)
+			return;
+
 		dev_RS485.com->TxNum = MODBUS_RTU_Handle(dev_RS485.com->RxBuf,
 			dev_RS485.com->RxCnt,
 			dev_RS485.com->TxBuf);                              //modbus 解析

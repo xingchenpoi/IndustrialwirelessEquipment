@@ -1197,6 +1197,12 @@
         <group>
             <name>User</name>
             <file>
+                <name>$PROJ_DIR$\..\Src\APP_DebugProtocol.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Inc\APP_DebugProtocol.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Src\APP_Di.c</name>
             </file>
             <file>

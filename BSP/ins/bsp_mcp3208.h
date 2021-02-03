@@ -17,7 +17,7 @@ extern "C" {
 	/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-	void MCP3208_Bsp_Init(s_MCP3208 *mcp3208);
+	void MCP3208_Bsp_Init(s_MCP3208 *mcp3208, s_CONFIG *config);
 	void MCP3208_Lanuch(void);
 
 #ifdef __cplusplus

@@ -42,13 +42,14 @@ void KFP_Init(KFP *kfp)
 
 
 /*******************************************************************************
-** 函数原型：void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
-** 函数功能：MCP班级驱动初始化
-** 输入参数：kfp     卡尔曼结构体参数
+** 函数原型：void MCP3208_Bsp_Init(s_MCP3208 *mcp3208, s_CONFIG *config)
+** 函数功能：板级驱动初始化
+** 输入参数：mcp3208     MCP3208首地址
+			 config      配置参数首地址
 ** 输出参数：无
 ** 备    注：
  *******************************************************************************/
-void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
+void MCP3208_Bsp_Init(s_MCP3208 *mcp3208, s_CONFIG *config)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
@@ -68,6 +69,9 @@ void MCP3208_Bsp_Init(s_MCP3208 *mcp3208)
 	MCP3208_CS_HIGH();
 
 	KFP_Init(KFP_Current);
+
+	mcp3208->para.A = config->caliPara.A;
+	mcp3208->para.B = config->caliPara.B;
 }
 
 
@@ -168,8 +172,14 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 			continue;
 		}
 		mcp3208->bat[i] = (float)mcp3208->value[i] * MCP3208_VERF / 4096 * 2;   //计算电压，电阻分压，要乘以2
+
 		//校准函数
-		mcp3208->bat[i] = 0.000100000001 * (mcp3208->bat[i] * mcp3208->bat[i]) + 1.048300000001 * mcp3208->bat[i] + 0.00310000001;
+		//mcp3208->bat[i] = 0.000100000001 * (mcp3208->bat[i] * mcp3208->bat[i]) + 1.048300000001 * mcp3208->bat[i] + 0.00310000001;
+		if (isSetCailPara == FALSE)
+		{
+			mcp3208->bat[i] = mcp3208->para.A * mcp3208->bat[i] + mcp3208->para.B;
+		}
+
 		//电流转化
 		mcp3208->current[i] = mcp3208->bat[i] / 249.0;
 		//防止超过范围

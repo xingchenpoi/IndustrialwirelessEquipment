@@ -18,6 +18,7 @@ extern "C" {
 #include "main.h"
 
 extern	bool isSetupUart;
+extern  bool isSetCailPara ;           //设置校验参数
 
 extern	s_Usart s_usart1;
 

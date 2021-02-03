@@ -21,6 +21,7 @@ extern "C" {
 //1,支持ucos
 #define SYSTEM_SUPPORT_OS		0		//定义系统文件夹是否支持UCOS
 
+#define VERSION                 "v1.0.0.20120202_rc"   //版本号
 
 /*-------------------------------外部常数声明--------------------------------*/
 #define EMPTY 0

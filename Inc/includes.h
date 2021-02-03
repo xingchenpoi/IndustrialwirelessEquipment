@@ -24,6 +24,7 @@ extern "C" {
 #include "APP_Di.h"
 #include "APP_Led.h"
 #include "APP_rs485.h"
+#include "APP_DebugProtocol.h"
 
 /* BSP ------------------------------------------------------------------*/
 #include "bsp.h"

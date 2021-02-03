@@ -187,6 +187,12 @@ typedef struct
 	UART_HandleTypeDef *husart;
 }s_Usart;
 
+typedef struct
+{
+	float A;
+	float B;
+}s_CalibrationPara;
+
 
 //RS485结构体
 typedef struct 
@@ -202,6 +208,7 @@ typedef struct
 	uint16_t value[MCP3208_AI_CHL_NUM];
 	float bat[MCP3208_AI_CHL_NUM];
 	float current[MCP3208_AI_CHL_NUM];
+	s_CalibrationPara para;
 }s_MCP3208;
 
 //LORA
@@ -249,6 +256,7 @@ typedef struct
 	uint32_t WordLength;
 }s_Uart_Para;
 
+
 //配置参数
 
 typedef struct
@@ -256,6 +264,7 @@ typedef struct
 	bool isSave;
 	uint8_t do_Reboot_sta;   //上电状态
 	s_Uart_Para uartPara;    //串口参数
+	s_CalibrationPara caliPara;  //校验参数
 }s_CONFIG;   
 
 

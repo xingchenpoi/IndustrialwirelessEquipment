@@ -67,6 +67,9 @@ void PARA_Init(s_CONFIG *config)
 		config->uartPara.WordLength = UART_WORDLENGTH_8B;
 		config->uartPara.StopBits = UART_STOPBITS_1;
 
+		config->caliPara.A = 1.0489;
+		config->caliPara.B = 0.0024;
+
 		ConfigPara_SaveData_Write(config);
 	}
 }
@@ -94,7 +97,7 @@ void Bsp_Init(void)
 
 	LED_Bsp_Init();                    //LED初始化
 	
-	MCP3208_Bsp_Init(&dev_mcp3208);    //AI初始化
+	MCP3208_Bsp_Init(&dev_mcp3208,&sysConfig);    //AI初始化
 	RS485_Bsp_Init();                  //RS485初始化
 	LORA_Bsp_Init();                   //LoRa初始化
 
