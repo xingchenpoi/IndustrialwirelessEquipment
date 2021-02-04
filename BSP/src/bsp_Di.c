@@ -34,7 +34,7 @@ void DI_Bsp_Init(void)
 	DI3_CLK_ENABLE();
 
 	GPIO_InitStruct.Pin = DI0_PIN;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(DI0_PORT, &GPIO_InitStruct);
 
