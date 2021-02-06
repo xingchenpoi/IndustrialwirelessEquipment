@@ -206,6 +206,7 @@ typedef struct
 {
 	SPI_HandleTypeDef *hspi;
 	uint16_t value[MCP3208_AI_CHL_NUM];
+	uint16_t currentHex[MCP3208_AI_CHL_NUM];
 	float bat[MCP3208_AI_CHL_NUM];
 	float current[MCP3208_AI_CHL_NUM];
 	s_CalibrationPara para;

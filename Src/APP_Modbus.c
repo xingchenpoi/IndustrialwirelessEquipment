@@ -129,18 +129,10 @@ void MODBUS_Data_Assignment(void)
 		modbusReg[AI0_CURRENT_REG2 + i * 2] = (((uint16_t)temp[2]) << 8) | temp[3];
 	}
 
-	//电压赋值
+	//电流赋值
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
-		val = dev_mcp3208.bat[i];
-		memcpy(&modbusReg[AI0_VOLTAGE_REG1 + i * 2], &val, 4);
-		temp[0] = modbusReg[AI0_VOLTAGE_REG2 + i * 2] >> 8;
-		temp[1] = modbusReg[AI0_VOLTAGE_REG2 + i * 2];
-		temp[2] = modbusReg[AI0_VOLTAGE_REG1 + i * 2] >> 8;
-		temp[3] = modbusReg[AI0_VOLTAGE_REG1 + i * 2];
-
-		modbusReg[AI0_VOLTAGE_REG1 + i * 2] = (((uint16_t)temp[0]) << 8) | temp[1];
-		modbusReg[AI0_VOLTAGE_REG2 + i * 2] = (((uint16_t)temp[2]) << 8) | temp[3];
+		modbusReg[AI0_CURRENT_HEX_REG + i] = dev_mcp3208.currentHex[i];
 	}
 }
 

@@ -81,6 +81,17 @@ void Protolcol_Parse(s_Usart *com, s_CONFIG *config)
 			com->TxNum = strlen("OK\r\n");
 		}	
 	}
+	else if(strstr((char *)com->RxBuf, "AT+VOLTAGE=") != NULL)
+	{
+		if (strstr((char *)com->RxBuf, "1") != NULL)
+		{
+			com->TxNum = sprintf((char *)com->TxBuf, "AT+VOLTAGE=1,%f\r\n", dev_mcp3208.bat[0]);
+		}
+		else if (strstr((char *)com->RxBuf, "2") != NULL)
+		{
+			com->TxNum = sprintf((char *)com->TxBuf, "AT+VOLTAGE=2,%f\r\n", dev_mcp3208.bat[1]);
+		}
+	}
 
 
 	if (com->TxNum > 0)	

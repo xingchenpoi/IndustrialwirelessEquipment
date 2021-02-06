@@ -182,8 +182,8 @@ extern "C" {
 #define MCP3208_AI_CHL_NUM			2            //AI通道
 #define MCP3208_VERF				2.5          //参考电压
 #define MCP3208_FILTER_NUM			11           //滤波数
-#define MCP3208_CURRENT_MIN			0.004        //电流最大值
-#define MCP3208_CURRENT_MAX			0.020        //电流最小值
+#define MCP3208_CURRENT_MIN			4			//电流最大值 mA
+#define MCP3208_CURRENT_MAX			20			//电流最小值 mA
 
 
 /****************************** MODBUS地址 ****************************/
@@ -193,7 +193,7 @@ extern "C" {
 
 #if MB_FUNC_READ_HOLDING_ENABLED
 #define  MODBUS_REG_READ_START_ADDR   0    //MODBUS 读寄存器起始地址
-#define  MODBUS_REG_READ_END_ADDR     19    //MODBUS 读寄存器起始地址
+#define  MODBUS_REG_READ_END_ADDR     17    //MODBUS 读寄存器起始地址
 #endif // MB_FUNC_READ_HOLDING_ENABLED
 
 
@@ -204,7 +204,7 @@ extern "C" {
 										&& MODBUS_REG_WRITE_END_ADDR >= reg)
 #endif // MB_FUNC_WRITE_HOLDING_ENABLED || MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED
 
-#define  MODBUS_HOLDREG_NUM			  20           //保持寄存器数量
+#define  MODBUS_HOLDREG_NUM			  18           //保持寄存器数量
 
 #define  SERIAL_PARA_REG			  0			   //串口属性  
    
@@ -230,11 +230,11 @@ extern "C" {
 #define  AI1_CURRENT_REG1			  14		   //AI1电流值寄存器1   
 #define  AI1_CURRENT_REG2			  15		   //AI1电流值寄存器2
 
-#define  AI0_VOLTAGE_REG1			  16		   //AI0电压值寄存器1   
-#define  AI0_VOLTAGE_REG2			  17		   //AI0电压值寄存器2    
+#define  AI0_CURRENT_HEX_REG		  16		   //AI0电压值寄存器  
 
-#define  AI1_VOLTAGE_REG1			  18		   //AI1电压值寄存器1   
-#define  AI1_VOLTAGE_REG2			  19		   //AI1电压值寄存器2 
+#define  AI1_CURRENT_HEX_REG		  17		   //AI1电压值寄存器     
+
+
 
 
 /****************************** LORA ****************************/

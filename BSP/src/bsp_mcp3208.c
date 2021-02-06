@@ -163,12 +163,13 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 	for (i = 0; i < MCP3208_AI_CHL_NUM; i++)
 	{
 		//滤波处理
-		mcp3208->value[i] = kalmanFilter(KFP_Current, i,(float)mcp3208->value[i]);
+		mcp3208->value[i] = (uint16_t)kalmanFilter(KFP_Current, i,(float)mcp3208->value[i]);
 		//电压计算
 		if (mcp3208->value[i] == 0)  //当处于0的时候不做处理
 		{
 			mcp3208->bat[i] = 0.996;
 			mcp3208->current[i] = MCP3208_CURRENT_MIN;
+			mcp3208->currentHex[i] = (uint16_t)(mcp3208->current[i] / 20.0 * 4096);
 			continue;
 		}
 		mcp3208->bat[i] = (float)mcp3208->value[i] * MCP3208_VERF / 4096 * 2;   //计算电压，电阻分压，要乘以2
@@ -181,12 +182,14 @@ void MCP3208_Enrty(s_MCP3208 *mcp3208)
 		}
 
 		//电流转化
-		mcp3208->current[i] = mcp3208->bat[i] / 249.0;
+		mcp3208->current[i] = mcp3208->bat[i] / 250.0 * 1000;     //以mA为单位
 		//防止超过范围
 		if (mcp3208->current[i] < MCP3208_CURRENT_MIN)  //电流最小值判断
 			mcp3208->current[i] = MCP3208_CURRENT_MIN;
 		if(mcp3208->current[i] > MCP3208_CURRENT_MAX)	//电流最大值判断
 			mcp3208->current[i] = MCP3208_CURRENT_MAX;
+
+		mcp3208->currentHex[i] = (uint16_t)(mcp3208->current[i] / 20.0 * 4096);
 	}
 }
 
