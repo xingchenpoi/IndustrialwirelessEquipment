@@ -115,7 +115,7 @@ void Bsp_Init(void)
 
 	DI_Bsp_Init();                     //DI初始化
 
-	WDG_Bsp_Init();                    //硬件看门狗初始化
+	//WDG_Bsp_Init();                    //硬件看门狗初始化
 }
 
 

@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\41610\Desktop\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.general.xcl" --backend -f "C:\Users\41610\Desktop\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.driver.xcl" 
+& "D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\41610\Desktop\test\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.general.xcl" --backend -f "C:\Users\41610\Desktop\test\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.driver.xcl" 
 }
 else
 {
-& "D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\41610\Desktop\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\41610\Desktop\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.driver.xcl" 
+& "D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\41610\Desktop\test\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\41610\Desktop\test\IndustrialwirelessEquipment\EWARM\settings\IndustrialwirelessEquipment.IndustrialwirelessEquipment.driver.xcl" 
 }

@@ -90,6 +90,7 @@ void LORA_Bsp_Init(void)
 
 	LORA_AT_CLK_ENABLE();
 	LORA_WP_CLK_ENABLE();
+	LORA_RST_CLK_ENABLE();
 
 	GPIO_InitStruct.Pin = LORA_AT_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -98,6 +99,10 @@ void LORA_Bsp_Init(void)
 	HAL_GPIO_Init(LORA_AT_PORT, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = LORA_WP_PIN;
+	HAL_GPIO_Init(LORA_WP_PORT, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LORA_RST_PIN;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(LORA_WP_PORT, &GPIO_InitStruct);
 
 
@@ -118,6 +123,9 @@ void LORA_Bsp_Init(void)
 *******************************************************************************/
 void LORA_StartUp_Handle(s_LORA *lora)
 {
+	LORA_RST_HIGH();          //复位脚拉高
+	delay_ms(10);
+
 	LORA_AT_MODE();           // AT脚拉高，AT设置模式
 
 	LORA_WP_HIGH();
@@ -334,16 +342,14 @@ void LORA_SoftInit_Handle(s_LORA *lora)
 		case COM_RX:
 			if (APP_TIM_ReadDecounterValue(TIM_LORA_COM_TO) == 0)  //判断是否超时
 			{
-				APP_TIM_StopDecounter(TIM_LORA_COM_TO); //停止计时
 				lora->com_state = COM_TIMEOUT;
 			}
 
 			if (lora->com->Status.bits.TaskDealFlg == 1)
 			{
 				lora->com->Status.bits.TaskDealFlg = 0;
-				APP_TIM_StopDecounter(TIM_LORA_COM_TO); //停止计时
 
-				if (LORA_SoftInit_AtRxHandle(lora))  //接收处理
+				if (LORA_SoftInit_AtRxHandle(lora) && (lora->com->RxCnt > 0))  //接收处理
 				{
 					if (lora->at_cmd == LORA_AT_CMD_RX_OFF)  //判断有没有处理完成
 					{
@@ -357,14 +363,14 @@ void LORA_SoftInit_Handle(s_LORA *lora)
 							lora->com->TxBuf,
 							lora->com->TxNum);
 						delay_ms(1);
+
+						APP_TIM_StartDecounter(TIM_LORA_TO, LORA_COMM_TO_TIME);   //开始通信超时检测
 					}
 					else
 						lora->at_cmd++;  //下一条AT指令
 
 					lora->com_state = COM_NONE;
 				}
-				else
-					lora->com_state = COM_TIMEOUT;
 			}				
 			break;
 
@@ -397,6 +403,8 @@ void LORA_Wrok_Handle(s_LORA *lora)
 {
 	if (lora->com->Status.bits.TaskDealFlg == 1)
 	{
+		APP_TIM_StartDecounter(TIM_LORA_TO, LORA_COMM_TO_TIME);   //收到一次数据刷新一次计时
+
 		lora->com->Status.bits.TaskDealFlg = 0;   //清除接收完成标志位
 		APP_LED_Comm_OneFlash();                  //通信灯闪烁一次
 		//MODBUS处理
@@ -410,6 +418,34 @@ void LORA_Wrok_Handle(s_LORA *lora)
 			delay_ms(1);
 		}
 	}
+
+	if (APP_TIM_ReadDecounterValue(TIM_LORA_TO) == 0)  
+	{
+		lora->state = eLORA_RST;  //若超时，切换到复位处理
+	}
+}
+
+
+
+
+
+/*******************************************************************************
+** 函数原型：void LORA_Restart_Handle(s_LORA *lora)
+** 函数功能：LORA复位处理
+** 输入参数：lora  LORA结构体首地址
+** 输出参数：无
+** 备    注：
+
+*******************************************************************************/
+void LORA_Restart_Handle(s_LORA *lora)
+{
+	LORA_RST_LOW();           
+	delay_ms(1);             
+	LORA_RST_HIGH();          
+	
+	lora->at_cmd = LORA_AT_CMD_AT;
+
+	lora->state = eLORA_STATRUP;
 }
 
 
@@ -441,7 +477,7 @@ void LORA_Entry(s_LORA *lora)
 			break;
 
 		case eLORA_RST:
-			lora->state = eLORA_STATRUP;
+			LORA_Restart_Handle(lora);
 			break;
 	}
 }

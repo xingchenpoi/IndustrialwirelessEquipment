@@ -68,6 +68,7 @@ typedef enum
 	TIM_LED,                 //运行灯
 	TIM_LED_COMM,            //通信灯
 	TIM_TANK_INTERVAL,
+	TIM_LORA_TO,             //LORA 通讯超时检查
 	end_of_table_cnt_decnt
 }e_TIM_TABLE_ID;
 
@@ -179,7 +180,7 @@ typedef struct
 //串口结构体
 typedef struct
 {
-	UART_STA Status;											//状态标志字节
+	volatile UART_STA Status;											//状态标志字节
 	uint8_t  RxCnt;												//接收长度
 	uint8_t  TxNum;												//发送长度
 	uint8_t  *RxBuf;											//接收缓存

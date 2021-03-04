@@ -250,6 +250,15 @@ extern "C" {
 #define LORA_WP_HIGH()				HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_SET)
 #define LORA_WP_LOW()				HAL_GPIO_WritePin(LORA_WP_PORT, LORA_WP_PIN,GPIO_PIN_RESET)
 
+
+#define LORA_RST_PIN				GPIO_PIN_15
+#define LORA_RST_PORT				GPIOA
+#define LORA_RST_CLK_ENABLE()		__HAL_RCC_GPIOA_CLK_ENABLE()
+#define LORA_RST_HIGH()				HAL_GPIO_WritePin(LORA_RST_PORT, LORA_RST_PIN,GPIO_PIN_SET)
+#define LORA_RST_LOW()				HAL_GPIO_WritePin(LORA_RST_PORT, LORA_RST_PIN,GPIO_PIN_RESET)
+
+#define LORA_COMM_TO_TIME           3600000               //LORA通讯超时时间
+
 /****************************** WDG *****************************/
 #define WDG_PIN						GPIO_PIN_0
 #define WDG_PORT					GPIOA
@@ -257,12 +266,12 @@ extern "C" {
 /******************************* D0 *****************************/
 #define DO_CHL_NUM       1   
 
-#define DO0_PIN			 GPIO_PIN_1
-#define DO0_PORT		 GPIOA
-#define DO0_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()
-#define DO0_H()          HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_SET)
-#define DO0_L()          HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_RESET)
-#define DO0_READ()       HAL_GPIO_ReadPin(DO0_PORT, DO0_PIN)
+#define DO0_PIN						GPIO_PIN_1
+#define DO0_PORT					GPIOA
+#define DO0_CLK_ENABLE()			__HAL_RCC_GPIOA_CLK_ENABLE()
+#define DO0_H()						HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_SET)
+#define DO0_L()						HAL_GPIO_WritePin(DO0_PORT, DO0_PIN,GPIO_PIN_RESET)
+#define DO0_READ()					HAL_GPIO_ReadPin(DO0_PORT, DO0_PIN)
 
 
 /******************************* DI *****************************/
